@@ -4,6 +4,7 @@ import openpyxl
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 from openpyxl import Workbook
 from openpyxl import load_workbook
+import time,os
 
 import pandas as pd
 
@@ -119,7 +120,7 @@ def search_data(datalink):
 
 
 def check_data(link):
-    print('开始数据去重，操作比较复杂，请稍等')
+    print('开始数据去重，数据处理起来比较复杂，请稍等.....')
     data = pd.DataFrame(pd.read_excel('战舰战损数据汇总.xlsx'))
 
     data.drop_duplicates(subset=None, keep='first',
@@ -130,9 +131,19 @@ def check_data(link):
 
 
 if __name__ == '__main__':
-    print('使用提醒：1. exe文件和xlsx表放在同一个文件夹内。 2,不能改统计表的名字。3,输入链接时一定要确认战舰类型')
-    datalink = input("输入要统计战舰的数据链接：")
-    search_data(datalink)
-    print('执行完爬虫，准开始下一步')
-    check_data('a')
-    print('所有操作完成，请打开表格查看数据')
+    m=1
+    #抓当前页数据
+    
+    #抓2-100的数据
+    while m<=10:
+        m+=1
+        print('--------------------------我是操作的分隔线 ，现在的时间是：'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+'-')
+        #print('使用提醒：1. exe文件和xlsx表放在同一个文件夹内。 2,不能改统计表的名字。  3,输入链接时一定要确认战舰类型。')
+
+        #datalink = input("输入要统计战舰损失的数据链接：")
+        datalink='https://zkillboard.com/ship/17738/losses/page/'+str(m)+'/'
+        search_data(datalink)
+        print('执行完爬虫，准开始下一步')
+        check_data('a')
+        print('所有操作完成，请打开表格查看数据')
+        time.sleep(5);
