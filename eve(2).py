@@ -10,7 +10,7 @@ import pandas as pd
 
 
 def search_data(datalink):
-    print("-------------------------begin----------------------------------------")
+    print("----------------------data search begin-----------------------------")
     response = requests.get(datalink)
     # print(response.text)
     soup = BeautifulSoup(response.content, 'lxml')
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     #抓2-100的数据
     while m<=10:
         m+=1
-        print('--------------------------我是操作的分隔线 ，现在的时间是：'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+'-')
+        print('---------我是操作的分隔线 ，现在的时间是：'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+'--------------')
         #print('使用提醒：1. exe文件和xlsx表放在同一个文件夹内。 2,不能改统计表的名字。  3,输入链接时一定要确认战舰类型。')
 
         #datalink = input("输入要统计战舰损失的数据链接：")
