@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import openpyxl
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection,Font
 from openpyxl import Workbook
 from openpyxl import load_workbook
 import time,os
@@ -11,7 +11,9 @@ import pandas as pd
 
 def search_data(datalink):
     print("----------------------data search begin-----------------------------")
-    response = requests.get(datalink)
+    response = requests.get(datalink, headers={
+                        'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36',
+                      })
     # print(response.text)
     soup = BeautifulSoup(response.content, 'lxml')
     ktbody = soup.find_all('tbody')[2]
@@ -39,14 +41,14 @@ def search_data(datalink):
     # sheet['G1'] = '作战星域'
     # sheet['H1'] = '玩家ID'
     # sheet['I1'] = '玩家所属公司'
-    # 创建样式（宽度）
-    # sheet.column_dimensions['A'].width = 18
-    # sheet.column_dimensions['D'].width = 40.0
-    # sheet.column_dimensions['G'].width = 20.0
-    # sheet.column_dimensions['H'].width = 30.0
-    # sheet.column_dimensions['I'].width = 35.0
-    # #行高
-    # sheet.row_dimensions[1].height = 10
+    #创建样式（宽度）
+    sheet.column_dimensions['A'].width = 15
+    sheet.column_dimensions['D'].width = 25.0
+    sheet.column_dimensions['G'].width = 15.0
+    sheet.column_dimensions['H'].width = 10.0
+    sheet.column_dimensions['I'].width = 35.0
+    #行高
+    sheet.row_dimensions[1].height = 20
     i = 1
     for kth in ktr:
        # print("-----------------------------start---------------------------")
@@ -76,6 +78,8 @@ def search_data(datalink):
             # print('玩家ID：' + s_playerId)
             s_playerCom = ktd[4].find_all('a')[1].get_text()
             # print('玩家所属公司：' + s_playerCom)
+            s_boat_type=ktd[4].get_text().split('(')[1].split(')')[0]
+            #print(s_boat_type)
 
             # 在添加数据之前，要进行数据唯一性检查，主要参考 日期+时间（和价值量）
             # first 组合数据
@@ -85,8 +89,7 @@ def search_data(datalink):
             #     if s == rowt:  # if语句，不加括号！！！切记
             #         s1 = 1
             # if s1 != 1:
-            sheet.append([s_date, s_time[1:6], s_value, s_lostlink, s_safelevel,
-                          s_location_xi, s_location_yu, s_playerId, s_playerCom])
+            sheet.append([s_date, s_time[1:6],s_boat_type, s_playerId, s_value,s_location_xi, s_location_yu,s_safelevel,s_playerCom,s_lostlink])
 
         # l = []
         # for rowt in rows:
@@ -130,12 +133,27 @@ def check_data(link):
     data.to_excel("战舰战损数据汇总.xlsx", index=False)
 
 
+def find_excelfile():
+    print('-------------check excel file -----')
+    if os.path.exists('战舰战损数据汇总.xlsx'):
+        break
+    else：
+        print('发现从未收集过此战舰的战损数据，\n现在程序已经创建“战舰战损数据汇总.xlsx，请别删除”')
+        print('删除了，你损失就大了。。。，\n你又要重复爬虫和汇总很多次了')
+        #创建文件20190718 1907
+
+    
+    print('---------------creat excel fiel----')
+
 if __name__ == '__main__':
+    find_excelfile()
+    #寻找要存储的文件，并做提示
+    
     m=1
     #抓当前页数据
     
     #抓2-100的数据
-    while m<=10:
+    while m<=2:
         m+=1
         print('---------我是操作的分隔线 ，现在的时间是：'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+'--------------')
         #print('使用提醒：1. exe文件和xlsx表放在同一个文件夹内。 2,不能改统计表的名字。  3,输入链接时一定要确认战舰类型。')
@@ -144,6 +162,6 @@ if __name__ == '__main__':
         datalink='https://zkillboard.com/ship/17738/losses/page/'+str(m)+'/'
         search_data(datalink)
         print('执行完爬虫，准开始下一步')
-        check_data('a')
-        print('所有操作完成，请打开表格查看数据')
-        time.sleep(5);
+        #check_data('a')
+        # print('所有操作完成，请打开表格查看数据')
+        time.sleep(5)
