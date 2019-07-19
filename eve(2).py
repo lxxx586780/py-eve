@@ -9,6 +9,7 @@ import os
 import sys
 import pandas as pd
 import random
+import qrcode
 
 
 def search_data(datalink):
@@ -170,6 +171,12 @@ def find_excelfile():
 
 
 if __name__ == '__main__':
+    datapic = 'https://www.baidu.com'
+    img = qrcode.make(data=datapic)
+    img.show('编写不易,还请鼓励')
+
+    time.sleep(50)
+    print('a')
     try:
         print('--------------------------------------------------------------------------')
         print('   let\'s go !操作不可逆,还请谨慎操作!来,~~~~~让我们一起在eve里荡起双桨...')
@@ -258,7 +265,6 @@ if __name__ == '__main__':
         print('-----------------------------------------')
         print('操作错误! 详细信息:')
         print(e)
-
     finally:
         print('-----------------------------------------')
         print('DONE ,完成了.....该做的我都做了.我现在要自毁了,倒计时5秒开始,,,,')
